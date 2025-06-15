@@ -21,7 +21,7 @@ FROM docker.io/langchain/langgraph-api:3.11
 
 # -- Install UV --
 # First install curl, then install UV using the standalone installer
-RUN apt-get update && apt-get install -y curl bash && \
+RUN apt-get update && apt-get install -y curl && \
     curl -LsSf https://astral.sh/uv/install.sh | sh && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 ENV PATH="/root/.local/bin:$PATH"
@@ -61,10 +61,3 @@ RUN uv pip uninstall --system pip setuptools wheel && \
 # -- End of pip removal --
 
 WORKDIR /deps/backend
-
-# --- FIX ---
-# Override the default command to make the container compatible with Railway.
-# This reads the PORT from the environment (provided by Railway) and sets the
-# LANGGRAPH_HTTP_PORT that the langgraph-api server expects.
-# It then executes the default langgraph-api server command.
-CMD ["/bin/bash", "-c", "export LANGGRAPH_HTTP_PORT=${PORT:-8000} && exec langgraph-api"]
