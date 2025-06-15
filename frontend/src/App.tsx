@@ -23,9 +23,7 @@ export default function App() {
     reasoning_model: string;
     use_web_search: boolean; // NEW: Added to thread state type
   }>({
-    apiUrl: import.meta.env.DEV
-      ? "http://localhost:2024"
-      : "",
+    apiUrl: import.meta.env.PROD ? "" : "http://localhost:2024/",
     assistantId: "agent",
     messagesKey: "messages",
     onFinish: (event: any) => {
