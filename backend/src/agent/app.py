@@ -1,10 +1,34 @@
+# backend/src/agent/app.py
+
 # mypy: disable - error - code = "no-untyped-def,misc"
 import pathlib
+import os # Import os
 from fastapi import FastAPI, Response
 from fastapi.staticfiles import StaticFiles
+from fastapi.middleware.cors import CORSMiddleware # <--- ADD THIS IMPORT
 
 # Define the FastAPI app
 app = FastAPI()
+
+# --- vvv ADD THIS WHOLE BLOCK vvv ---
+# Set up CORS middleware
+# This is crucial for allowing the frontend to communicate with the backend
+# when they are hosted on the same domain but served from different paths.
+origins = [
+    # In a real production app, you might want to be more restrictive.
+    # For this example, allowing all origins is fine for simplicity.
+    # Or, you can get the specific frontend URL from an environment variable.
+    "*", 
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"], # Allows all methods (GET, POST, etc.)
+    allow_headers=["*"], # Allows all headers
+)
+# --- ^^^ END OF BLOCK ^^^ ---
 
 
 def create_frontend_router(build_dir="../frontend/dist"):
